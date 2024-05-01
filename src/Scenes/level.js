@@ -6,6 +6,8 @@ class Level extends Phaser.Scene
         // Default player coords
         this.playerX = 400
         this.playerY = 500
+        this.playerShotX = this.playerX
+        this.playerShotY = this.playerY - 10;
     }
 
     preload() 
