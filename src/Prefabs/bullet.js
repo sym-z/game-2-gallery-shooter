@@ -3,6 +3,7 @@ class Bullet extends Phaser.GameObjects.Sprite {
         super(scene , -100, -100, image, frame);
         this.visible = false;
         this.active = false;
+        this.damage = 1;
         return this;
         
     }

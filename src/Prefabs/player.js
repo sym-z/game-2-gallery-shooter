@@ -7,6 +7,8 @@ class Player extends Phaser.GameObjects.Sprite {
         this.right = right_key; 
         this.player_speed = player_speed;
         this.damage = 1;
+        // Handles new sprite for bullet
+        this.bullet_type = "Bullet";
     }
     update() 
     {

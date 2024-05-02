@@ -16,7 +16,7 @@ class Level extends Phaser.Scene
         this.player_speed = 5;
         this.bullet_speed = 5;
        
-        this.bullet_cooldown = 3;
+        this.bullet_cooldown = 50;
         this.bullet_cooldown_counter = 0;
         // All enemies on screen are stored in this array.
         this.enemies = [];
@@ -94,18 +94,7 @@ class Level extends Phaser.Scene
 
         if (this.fire.isDown)
         {
-            if(this.bullet_cooldown_counter < 0)
-            {
-                let bullet = this.bulletGroup.getFirstDead();
-
-                if(bullet != null)
-                {
-                    this.bullet_cooldown_counter = this.bullet_cooldown;
-                    bullet.makeActive();
-                    bullet.x = this.me.x;
-                    bullet.y = this.me.y - 10;
-                }
-            }
+            this.fire_projectile(this.me.bullet_type);
         }
         this.me.update();
         for (let b of this.bulletGroup.children.entries)
@@ -114,12 +103,14 @@ class Level extends Phaser.Scene
             {
                 if(this.collides(b,e))
                 {
-                    console.log("HIT")
+                    //console.log("HIT")
                     // Destroy bullet to prevent multi-hit
                     b.makeInactive();
                     b.x = -100;
                     b.y = -100;
-                    this.hit_card(this.me.damage, e)
+                    // BUllet's damage not player damage
+                    this.hit_card(b, e)
+                    //b.damage = 1;
                 }
             }
         }
@@ -165,26 +156,53 @@ class Level extends Phaser.Scene
         return true;
     }
 
-    hit_card(player_damage,enemy)
+    hit_card(bullet,enemy)
     {
-        console.log("Player is hitting card with health " + enemy.damage + " for " + player_damage + " damage.")
-        let diff = enemy.damage - player_damage;
-        console.log(diff)
+        //console.log("Player is hitting card with health " + enemy.damage + " for " + player_damage + " damage.")
+        let diff = enemy.damage - bullet.damage;
+       // console.log(diff)
         if (diff > 0)
         {
             let new_id = "large-cards/card_" + enemy.suit + "_" + enemy.calc_card(diff) + ".png";
-            console.log(new_id)
+            //console.log(new_id)
             enemy.id = new_id;
             enemy.name = enemy.id.replace("large-cards/card_", "").replace(".png", "");
             enemy.damage = diff;
             enemy.card = enemy.calc_card();
             enemy.setTexture(new_id)
-
+            bullet.damage = 1;
         }
         else
         {
-            console.log("Card Death")
+            //console.log("Card Death")
+            this.me.bullet_type = enemy.original_id;
+            this.bulletGroup.getFirstDead().damage = enemy.original_damage;
+            this.me.setTexture(enemy.original_id)
         }
         
+    }
+    
+    fire_projectile(type = "Bullet")
+    {
+        if(this.bullet_cooldown_counter < 0)
+        {
+            let bullet = this.bulletGroup.getFirstDead();
+
+            if(bullet != null)
+            {
+                this.bullet_cooldown_counter = this.bullet_cooldown;
+                console.log(bullet.damage)
+                bullet.makeActive();
+                bullet.setTexture(type)
+                bullet.x = this.me.x;
+                bullet.y = this.me.y - 10;
+            }
+        }
+        if(type != "Bullet")
+        {
+            this.me.bullet_type = "Bullet"
+            this.me.setTexture("Joker")
+            //this.me.damage = 1;
+        }
     }
 }

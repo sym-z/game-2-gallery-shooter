@@ -6,14 +6,15 @@ class Enemy extends Phaser.GameObjects.Sprite {
 
         // Used to take existing card and put it into deck
         this.id = id;
-        
+
         // Used to put card into deck
         this.original_id = id;
         this.name = id.replace("large-cards/card_", "").replace(".png", "");
         this.suit = this.name.substring(0, this.name.indexOf('_'));
         this.card = this.name.substring(this.name.indexOf('_') + 1);
         this.calc_damage();
-        console.log(this.id, this.name, this.suit, this.card, this.damage)
+        this.original_damage = this.damage;
+        //console.log(this.id, this.name, this.suit, this.card, this.damage)
 
     }
     update() {
