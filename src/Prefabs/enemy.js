@@ -6,7 +6,7 @@ class Enemy extends Phaser.GameObjects.Sprite {
 
         // Used to take existing card and put it into deck
         this.id = id;
-
+        this.alive = true;
         // Used to put card into deck
         this.original_id = id;
         this.name = id.replace("large-cards/card_", "").replace(".png", "");
@@ -113,5 +113,12 @@ class Enemy extends Phaser.GameObjects.Sprite {
         }
         return retval;
 
+    }
+    die()
+    {
+        this.visible = false
+        this.x = -600;
+        this.y = -600;
+        this.alive = false;
     }
 }

@@ -178,12 +178,17 @@ class Level extends Phaser.Scene
             this.me.bullet_type = enemy.original_id;
             this.bulletGroup.getFirstDead().damage = enemy.original_damage;
             this.me.setTexture(enemy.original_id)
+            //enemy.die();
+            enemy.visible = false
+            enemy.x = -600;
+            enemy.y = -600;
         }
         
     }
     
     fire_projectile(type = "Bullet")
     {
+        console.log(type)
         if(this.bullet_cooldown_counter < 0)
         {
             let bullet = this.bulletGroup.getFirstDead();
@@ -201,8 +206,8 @@ class Level extends Phaser.Scene
         if(type != "Bullet")
         {
             this.me.bullet_type = "Bullet"
+            console.log("HEEEEY")
             this.me.setTexture("Joker")
-            //this.me.damage = 1;
         }
     }
 }
