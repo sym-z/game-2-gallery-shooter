@@ -4,14 +4,12 @@ class Bullet extends Phaser.GameObjects.Sprite {
         this.visible = false;
         this.active = false;
         return this;
-        //scene.add.existing(this)
         
     }
     update() 
     {
         if (this.active)
         {
-            console.log(this.speed)
             this.y -= this.speed;
             if(this.y < -(this.displayHeight/2))
             {
@@ -22,7 +20,6 @@ class Bullet extends Phaser.GameObjects.Sprite {
 
     makeActive()
     {
-        console.log("MAKING ACTIVE")
         this.visible = true;
         this.active = true;
     }

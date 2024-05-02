@@ -19,7 +19,8 @@ class Level extends Phaser.Scene
         this.bullet_cooldown = 3;
         this.bullet_cooldown_counter = 0;
         // All enemies on screen are stored in this array.
-        this.enemies = []
+        this.enemies = [];
+        this.enemy_names = [];
     }
 
     preload() 
@@ -27,18 +28,38 @@ class Level extends Phaser.Scene
         this.load.setPath("./assets/");
         this.load.image("Joker", "large-cards/card_joker_black.png");
         this.load.image("Bullet", "small-cards/card_hearts_suit.png") 
+        
+        
+        let card = "large-cards/card_";
+        let deck = ["A", "02", "03", "04", "05", "06", "07", "08", "09", "10", "J","Q","K"]
+        let suits = ["diamonds","clubs","spades","hearts"]
+        //console.log("LOADING CARDS") 
+        // Load all possible cards
+        for(let d of deck)
+        {
+            for (let s of suits)
+            {
+                card += s + "_" + d + ".png"
+                //console.log(card)
+                this.load.image(card, card)
+                card = "large-cards/card_"
+            }
+        }
+        //console.log("CARDS LOADED")
+        // Generate random cards, and push the names into an array
         for (let i = 0; i < this.num_enemies; i++)
         {
             let title = this.generate_card()
-            this.load.image("Enemy" + i, title)
-            console.log("Enemy"+i)
+            this.enemy_names.push(title)
         }
     }
 
     create() 
     {
+        // Create input keys
         this.create_keys(this);
         
+        // Make bullet group
         this.bulletGroup = this.add.group
         ({
             active: true,
@@ -55,15 +76,16 @@ class Level extends Phaser.Scene
             repeat: this.bulletGroup.maxSize - 1
         });
         this.bulletGroup.propertyValueSet("speed", this.bullet_speed);
-
+        
+        // Create all enemies, push them into an array
         for(let i = 0; i < this.num_enemies; i++)
         {
-            this.enemy = new Enemy(this, 400+i*75,300-i*75,"Enemy"+i);
+            this.enemy = new Enemy(this, 400+i*75,300-i*75, this.enemy_names[i], this.enemy_names[i]);
             this.enemies.push(this.enemy);
         }
-        console.log(this.enemies)
+
+        // Create player
         this.me = new Player(this,this.playerX,this.playerY,"Joker", null, this.left, this.right, this.player_speed).setOrigin(0.5);
-        console.log(this.bulletGroup)
     }
 
     update(time, delta) 
@@ -78,7 +100,6 @@ class Level extends Phaser.Scene
 
                 if(bullet != null)
                 {
-                    console.log("Test");
                     this.bullet_cooldown_counter = this.bullet_cooldown;
                     bullet.makeActive();
                     bullet.x = this.me.x;
@@ -86,30 +107,25 @@ class Level extends Phaser.Scene
                 }
             }
         }
-        //this.x += delta
         this.me.update();
         for (let e of this.enemies)
         {
             e.update();
             if (e.x >= 800 || e.x <= 0)
             {
-                //this.flip()
                 e.switch_direction();
             }
         }
 
-        //console.log(this.x/1000)
     }
     generate_card()
     {
-        let card = "card_";
+        let card = "large-cards/card_";
         let deck = ["A", "02", "03", "04", "05", "06", "07", "08", "09", "10", "J","Q","K"]
         let suits = ["diamonds","clubs","spades","hearts"]
         let rand_deck = deck[Phaser.Math.Between(0,deck.length-1)]
         let rand_suit = suits[Phaser.Math.Between(0,suits.length-1)]
         card += rand_suit + "_" + rand_deck + ".png";
-        //this.load.setPath("./assets/large-cards/");
-        card = "large-cards/" + card;
         return card;
     }
     flip()
