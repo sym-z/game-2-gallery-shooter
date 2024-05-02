@@ -122,6 +122,9 @@ class Level extends Phaser.Scene
                 e.switch_direction();
             }
         }
+        
+        // This works! Checks if the wave is over
+        //console.log(this.check_end());
 
     }
     generate_card()
@@ -206,5 +209,15 @@ class Level extends Phaser.Scene
             console.log("HEEEEY")
             this.me.setTexture("Joker")
         }
+    }
+
+    check_end()
+    {
+        // Iterate through all of the enemies in the array and see if they are alive
+        for (let e of this.enemies)
+        {
+            if (e.alive) return false;
+        }
+        return true;
     }
 }
