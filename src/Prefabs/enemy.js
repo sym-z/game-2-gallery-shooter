@@ -1,16 +1,30 @@
 class Enemy extends Phaser.GameObjects.Sprite {
-    constructor(scene, x,y, image, id) {
-        super(scene , x, y, image);
+    constructor(scene, x, y, image, id) {
+        super(scene, x, y, image);
         scene.add.existing(this)
         this.direction = 1;
-        
+
         // Used to take existing card and put it into deck
         this.id = id;
+        
+        // Used to put card into deck
+        this.original_id = id;
         this.name = id.replace("large-cards/card_", "").replace(".png", "");
-        this.suit = this.name.substring(0,this.name.indexOf('_'));
-        this.card = this.name.substring(this.name.indexOf('_')+1);
-        switch (this.card)
-        {
+        this.suit = this.name.substring(0, this.name.indexOf('_'));
+        this.card = this.name.substring(this.name.indexOf('_') + 1);
+        this.calc_damage();
+        console.log(this.id, this.name, this.suit, this.card, this.damage)
+
+    }
+    update() {
+        this.x += 3 * this.direction;
+    }
+
+    switch_direction() {
+        this.direction *= -1;
+    }
+    calc_damage() {
+        switch (this.card) {
             case "A":
                 this.damage = 1;
                 break;
@@ -51,16 +65,52 @@ class Enemy extends Phaser.GameObjects.Sprite {
                 this.damage = 13;
                 break;
         }
-        console.log(this.id, this.name, this.suit,this.card, this.damage)
-        
-    }
-    update() 
-    {
-        this.x += 3 * this.direction;
     }
 
-    switch_direction()
-    {
-        this.direction *= -1;
+    calc_card(diff = this.damage) {
+        let retval = "";
+        switch (diff) {
+            case 1:
+                retval = "A";
+                break;
+            case 2:
+                retval = "02";
+                break;
+            case 3:
+                retval = "03";
+                break;
+            case 4:
+                retval = "04";
+                break;
+            case 5:
+                retval = "05";
+                break;
+            case 6:
+                retval = "06";
+                break;
+            case 7:
+                retval = "07";
+                break;
+            case 8:
+                retval = "08";
+                break;
+            case 9:
+                retval = "09";
+                break;
+            case 10:
+                retval = "10";
+                break;
+            case 11:
+                retval = "J";
+                break;
+            case 12:
+                retval = "Q";
+                break;
+            case 13:
+                retval = "K";
+                break;
+        }
+        return retval;
+
     }
 }

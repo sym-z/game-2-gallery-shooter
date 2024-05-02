@@ -6,6 +6,7 @@ class Player extends Phaser.GameObjects.Sprite {
         this.left = left_key; 
         this.right = right_key; 
         this.player_speed = player_speed;
+        this.damage = 1;
     }
     update() 
     {

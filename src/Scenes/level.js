@@ -108,6 +108,21 @@ class Level extends Phaser.Scene
             }
         }
         this.me.update();
+        for (let b of this.bulletGroup.children.entries)
+        {
+            for (let e of this.enemies)
+            {
+                if(this.collides(b,e))
+                {
+                    console.log("HIT")
+                    // Destroy bullet to prevent multi-hit
+                    b.makeInactive();
+                    b.x = -100;
+                    b.y = -100;
+                    this.hit_card(this.me.damage, e)
+                }
+            }
+        }
         for (let e of this.enemies)
         {
             e.update();
@@ -141,5 +156,35 @@ class Level extends Phaser.Scene
         scene.left = this.input.keyboard.addKey("A");
         scene.right = this.input.keyboard.addKey("D");
         scene.fire = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    }
+
+    collides(a,b)
+    {
+        if(Math.abs(a.x - b.x) > (a.displayWidth/2 + b.displayWidth/2)) return false;
+        if(Math.abs(a.y - b.y) > (a.displayHeight/2 + b.displayHeight/2)) return false;
+        return true;
+    }
+
+    hit_card(player_damage,enemy)
+    {
+        console.log("Player is hitting card with health " + enemy.damage + " for " + player_damage + " damage.")
+        let diff = enemy.damage - player_damage;
+        console.log(diff)
+        if (diff > 0)
+        {
+            let new_id = "large-cards/card_" + enemy.suit + "_" + enemy.calc_card(diff) + ".png";
+            console.log(new_id)
+            enemy.id = new_id;
+            enemy.name = enemy.id.replace("large-cards/card_", "").replace(".png", "");
+            enemy.damage = diff;
+            enemy.card = enemy.calc_card();
+            enemy.setTexture(new_id)
+
+        }
+        else
+        {
+            console.log("Card Death")
+        }
+        
     }
 }
