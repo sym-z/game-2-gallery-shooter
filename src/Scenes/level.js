@@ -178,10 +178,7 @@ class Level extends Phaser.Scene
             this.me.bullet_type = enemy.original_id;
             this.bulletGroup.getFirstDead().damage = enemy.original_damage;
             this.me.setTexture(enemy.original_id)
-            //enemy.die();
-            enemy.visible = false
-            enemy.x = -600;
-            enemy.y = -600;
+            enemy.die();
         }
         
     }
