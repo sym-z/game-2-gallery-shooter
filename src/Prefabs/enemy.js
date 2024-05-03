@@ -19,6 +19,8 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         this.timer = 0.0
         this.faceCard = true ? this.damage > 10 : false;
         this.shots_fired = []
+        this.playerY = null;
+        this.playerX = null;
         this.config =
         {
             from: 0,
@@ -49,6 +51,7 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         //console.log(fire_time)
         if(this.timer > fire_time)
         {
+            //this.dive();
             this.timer = 0.0;
             this.fire_shot();
         }
@@ -61,6 +64,24 @@ class Enemy extends Phaser.GameObjects.PathFollower {
             }
             else
             {
+                // RANDOM BETWEEN HOMING and NON HOMING
+                 //f.y += 3.0;
+                
+                //Get displacement vector
+                let disvecY = this.playerY - f.y;
+                let disvecX = this.playerX - f.x;
+
+                // Calculate magnitude
+                let mag = Math.sqrt(disvecY * disvecY + disvecX * disvecX);
+
+                // Normalize vector
+                let dirY = disvecY / mag;
+                let dirX = disvecX / mag;
+
+                f.y += dirY * 3.0;
+                f.x += dirX * 3.0;
+                
+                
                 f.y += 3.0;
                 if(this.papa.collides(this.papa.me, f))
                 {
@@ -75,6 +96,7 @@ class Enemy extends Phaser.GameObjects.PathFollower {
             }
 
         }
+        
     }
     clear_shots()
     {
@@ -84,27 +106,14 @@ class Enemy extends Phaser.GameObjects.PathFollower {
             f.destroy();
         }
     }
-    dive()
-    {
-        
-        // Make a set of points to the player
-        // In update if they collide kill enemy, deal card damage
-        // If miss, reset path back to original
-        /*if(!faceCard)
-        {
 
-        }
-        else
-        {
-            return;
-        }*/
-    }
     fire_shot()
     {
+        this.playerY = this.papa.me.y;
+        this.playerX = this.papa.me.x;
         if(this.active && this.alive)
         {
             if (this.faceCard) {
-                console.log("big fire")
                 this.proj = this.papa.add.sprite(this.x, this.y, this.original_id)
                 this.papa.add.existing(this.proj)
                 this.shots_fired.push(this.proj)
