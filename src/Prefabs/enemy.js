@@ -19,6 +19,19 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         this.timer = 0.0
         this.faceCard = true ? this.damage > 10 : false;
         this.shots_fired = []
+        this.config =
+        {
+            from: 0,
+            to: 1,
+            delay: 0,
+            duration: 7000,
+            ease: 'Sine.easeInOut',
+            repeat: -1,
+            yoyo: true,
+            rotateToPath: false,
+            rotationOffset: -90
+        };
+        this.original_path = path;
         if (this.faceCard)
         {
             this.proj_damage = this.damage;
@@ -70,6 +83,13 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         {
             f.destroy();
         }
+    }
+    dive()
+    {
+        // Make a set of points to the player
+        // In update if they collide kill enemy, deal card damage
+        // If miss, reset path back to original
+
     }
     fire_shot()
     {
