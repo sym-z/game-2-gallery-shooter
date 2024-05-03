@@ -66,23 +66,27 @@ class Enemy extends Phaser.GameObjects.PathFollower {
             {
                 // RANDOM BETWEEN HOMING and NON HOMING
                  //f.y += 3.0;
-                
-                //Get displacement vector
-                let disvecY = this.playerY - f.y;
-                let disvecX = this.playerX - f.x;
+               if (!this.faceCard)
+               {
+                   //Get displacement vector
+                   let disvecY = this.playerY - f.y;
+                   let disvecX = this.playerX - f.x;
 
-                // Calculate magnitude
-                let mag = Math.sqrt(disvecY * disvecY + disvecX * disvecX);
+                   // Calculate magnitude
+                   let mag = Math.sqrt(disvecY * disvecY + disvecX * disvecX);
 
-                // Normalize vector
-                let dirY = disvecY / mag;
-                let dirX = disvecX / mag;
+                   // Normalize vector
+                   let dirY = disvecY / mag;
+                   let dirX = disvecX / mag;
 
-                f.y += dirY * 3.0;
-                f.x += dirX * 3.0;
-                
-                
-                f.y += 3.0;
+                   f.y += dirY * 3.0;
+                   f.x += dirX * 3.0;
+               }
+                else
+               {
+
+                   f.y += 3.0;
+               }
                 if(this.papa.collides(this.papa.me, f))
                 {
                     console.log("HIT")
