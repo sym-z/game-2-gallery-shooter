@@ -86,10 +86,18 @@ class Enemy extends Phaser.GameObjects.PathFollower {
     }
     dive()
     {
+        
         // Make a set of points to the player
         // In update if they collide kill enemy, deal card damage
         // If miss, reset path back to original
+        /*if(!faceCard)
+        {
 
+        }
+        else
+        {
+            return;
+        }*/
     }
     fire_shot()
     {
