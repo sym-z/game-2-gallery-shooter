@@ -1,6 +1,6 @@
-class Enemy extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y, image, id) {
-        super(scene, x, y, image);
+class Enemy extends Phaser.GameObjects.PathFollower {
+    constructor(scene, path, x, y, image, id) {
+        super(scene,path, x, y, image);
         scene.add.existing(this)
         this.direction = 1;
 
@@ -18,7 +18,7 @@ class Enemy extends Phaser.GameObjects.Sprite {
 
     }
     update() {
-        this.x += 3 * this.direction;
+        //this.x += 3 * this.direction;
     }
 
     switch_direction() {
@@ -120,5 +120,6 @@ class Enemy extends Phaser.GameObjects.Sprite {
         this.x = -600;
         this.y = -600;
         this.alive = false;
+        console.log(this.card, " has died.")
     }
 }
