@@ -19,28 +19,73 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         this.timer = 0.0
         this.faceCard = true ? this.damage > 10 : false;
         this.shots_fired = []
+        if (this.faceCard)
+        {
+            this.proj_damage = this.damage;
+        }
+        else
+        {
+            this.proj_damage = 1;
+        }
     }
     update(delta) {
         let delta_sec = delta / 100;
         this.timer += delta_sec;
         // CHANGE 5 TO RANDOM FOR offset shots
-        if(this.timer > 5.0)
+        let fire_time = Phaser.Math.Between(25,1000)
+        //console.log(fire_time)
+        if(this.timer > fire_time)
         {
             this.timer = 0.0;
             this.fire_shot();
         }
+        for(let f of this.shots_fired)
+        {
+            if (f.y > 500)
+            {
+                f.visible = false;              
+                f.destroy();
+            }
+            else
+            {
+                f.y += 3.0;
+                if(this.papa.collides(this.papa.me, f))
+                {
+                    console.log("HIT")
+                    f.x = -1000;
+                    f.y = 1000;
+                    f.destroy();
+                    // CHANGE THIS TO DAMAGE NUMBER
+                    console.log(this.proj_damage)
+                    this.papa.me.health -= this.proj_damage; 
+                }
+            }
+
+        }
+    }
+    clear_shots()
+    {
+        // Destroy every shot on the screen, used when level restarts
+        for(let f of this.shots_fired)
+        {
+            f.destroy();
+        }
     }
     fire_shot()
     {
-        if (this.faceCard)
+        if(this.active && this.alive)
         {
-            console.log("big fire") 
-            this.proj = this.papa.add.sprite(this.x,this.y,this.papa.enemy_names[0])
-            this.papa.add.existing(this.proj)
-        }
-        else
-        {
-           console.log("mini fire") 
+            if (this.faceCard) {
+                console.log("big fire")
+                this.proj = this.papa.add.sprite(this.x, this.y, this.original_id)
+                this.papa.add.existing(this.proj)
+                this.shots_fired.push(this.proj)
+            }
+            else {
+                this.proj = this.papa.add.sprite(this.x, this.y, "Proj")
+                this.papa.add.existing(this.proj)
+                this.shots_fired.push(this.proj)
+            }
         }
     }
     switch_direction() {
@@ -142,6 +187,8 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         this.x = -600;
         this.y = -600;
         this.alive = false;
+        this.active = false;
+        this.clear_shots();
         console.log(this.card, " has died.")
     }
 }

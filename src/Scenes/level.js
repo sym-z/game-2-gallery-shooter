@@ -25,6 +25,7 @@ class Level extends Phaser.Scene {
         this.load.setPath("./assets/");
         this.load.image("Joker", "large-cards/card_joker_black.png");
         this.load.image("Bullet", "small-cards/card_hearts_suit.png")
+        this.load.image("Proj", "small-cards/card_clubs_suit.png")
 
 
         let card = "large-cards/card_";
@@ -59,24 +60,7 @@ class Level extends Phaser.Scene {
         // Create input keys
         this.create_keys(this);
 
-        // Make bullet group
-        this.bulletGroup = this.add.group
-            ({
-                active: true,
-                defaultKey: "Bullet",
-                maxSize: 10,
-                runChildUpdate: true
-            })
-
-        this.bulletGroup.createMultiple
-            ({
-                classType: Bullet,
-                active: false,
-                key: this.bulletGroup.defaultKey,
-                repeat: this.bulletGroup.maxSize - 1
-            });
-        this.bulletGroup.propertyValueSet("speed", this.bullet_speed);
-
+        this.make_bullet_group(this);
 
         let obj =
         {
@@ -102,6 +86,7 @@ class Level extends Phaser.Scene {
     }
 
     update(time, delta) {
+        console.log(this.me.health)
         this.bullet_cooldown_counter--;
 
         if (this.fire.isDown) {
@@ -124,16 +109,10 @@ class Level extends Phaser.Scene {
         }
         for (let e of this.enemies) {
             e.update(delta);
-            /*if (e.x >= 800 || e.x <= 0)
-            {
-                e.switch_direction();
-            }*/
         }
-        let game_over = this.check_end();
-        if(game_over)
+        if(this.check_end())
         {
-            
-            this.scene.start("Level")
+            this.restart();
         }
         for(let b of this.bulletGroup.children.entries)
         {
@@ -143,13 +122,48 @@ class Level extends Phaser.Scene {
             }
         }
     }
+    restart()
+    {
+        for (let e of this.enemies)
+        {
+            e.die();
+        }
+        this.scene.restart()
+
+    }
     check_end()
     {
+        if(this.me.health <= 0)
+        {
+            return true;
+        }
         for(let e of this.enemies)
         {
             if (e.alive) return false;
         }
         return true;
+    }
+    make_bullet_group(scene)
+    {
+        // Make bullet group
+        scene.bulletGroup = scene.add.group
+            ({
+                active: true,
+                defaultKey: "Bullet",
+                maxSize: 10,
+                runChildUpdate: true
+            })
+
+        scene.bulletGroup.createMultiple
+            ({
+                classType: Bullet,
+                active: false,
+                key: scene.bulletGroup.defaultKey,
+                repeat: scene.bulletGroup.maxSize - 1
+            });
+        scene.bulletGroup.propertyValueSet("speed", scene.bullet_speed);
+
+
     }
     generate_card() {
         let card = "large-cards/card_";
@@ -193,6 +207,7 @@ class Level extends Phaser.Scene {
             this.me.bullet_type = enemy.original_id;
             this.bulletGroup.getFirstDead().damage = enemy.original_damage;
             this.me.setTexture(enemy.original_id)
+            this.me.health += enemy.original_damage;
             this.me.isJoker = false;
             enemy.die();
         }
@@ -213,6 +228,14 @@ class Level extends Phaser.Scene {
             if (type != "Bullet") {
                 this.me.bullet_type = "Bullet"
                 this.me.setTexture("Joker")
+                if(this.me.health - bullet.damage > 0)
+                {
+                    this.me.health -= bullet.damage;
+                }
+                else
+                {
+                    this.me.health = 1;
+                }
                 this.me.isJoker = true;
                 this.bulletGroup.getFirstDead().damage = 1;
             }
