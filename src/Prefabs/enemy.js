@@ -15,25 +15,15 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         this.card = this.name.substring(this.name.indexOf('_') + 1);
         this.calc_damage();
         this.original_damage = this.damage;
-        //console.log(this.id, this.name, this.suit, this.card, this.damage)
         this.timer = 0.0
+        // Figure out if it is a Face Card
         this.faceCard = true ? this.damage > 10 : false;
+        // Bag of shots
         this.shots_fired = []
+        // Player's Position
         this.playerY = null;
         this.playerX = null;
-        this.config =
-        {
-            from: 0,
-            to: 1,
-            delay: 0,
-            duration: 7000,
-            ease: 'Sine.easeInOut',
-            repeat: -1,
-            yoyo: true,
-            rotateToPath: false,
-            rotationOffset: -90
-        };
-        this.original_path = path;
+        
         if (this.faceCard)
         {
             this.proj_damage = this.damage;
@@ -48,10 +38,8 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         this.timer += delta_sec;
         // CHANGE 5 TO RANDOM FOR offset shots
         let fire_time = Phaser.Math.Between(25,1000)
-        //console.log(fire_time)
         if(this.timer > fire_time)
         {
-            //this.dive();
             this.timer = 0.0;
             this.fire_shot();
         }
@@ -65,7 +53,6 @@ class Enemy extends Phaser.GameObjects.PathFollower {
             else
             {
                 // RANDOM BETWEEN HOMING and NON HOMING
-                 //f.y += 3.0;
                if (!this.faceCard)
                {
                    //Get displacement vector
@@ -113,6 +100,7 @@ class Enemy extends Phaser.GameObjects.PathFollower {
 
     fire_shot()
     {
+        // Aim at the player
         this.playerY = this.papa.me.y;
         this.playerX = this.papa.me.x;
         if(this.active && this.alive)
@@ -128,9 +116,6 @@ class Enemy extends Phaser.GameObjects.PathFollower {
                 this.shots_fired.push(this.proj)
             }
         }
-    }
-    switch_direction() {
-        this.direction *= -1;
     }
     calc_damage() {
         switch (this.card) {

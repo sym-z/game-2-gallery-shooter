@@ -1,8 +1,6 @@
 class Player extends Phaser.GameObjects.Sprite {
     constructor(scene, x,y, image, frame, left_key, right_key, player_speed) {
         super(scene , x, y, image, frame);
-        this.name = "Jack"
-        //TODO: CHANGE THIS TO BE DEPENDANT ON HEALTH
         this.health = 3;
         this.isJoker = true;
         scene.add.existing(this)
@@ -30,6 +28,5 @@ class Player extends Phaser.GameObjects.Sprite {
                 this.x += this.player_speed;
             }
         }
-        // Health
     }
 }
