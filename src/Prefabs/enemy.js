@@ -3,6 +3,7 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         super(scene,path, x, y, image);
         scene.add.existing(this)
         this.direction = 1;
+        this.papa = scene;
 
         // Used to take existing card and put it into deck
         this.id = id;
@@ -15,12 +16,33 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         this.calc_damage();
         this.original_damage = this.damage;
         //console.log(this.id, this.name, this.suit, this.card, this.damage)
-
+        this.timer = 0.0
+        this.faceCard = true ? this.damage > 10 : false;
+        this.shots_fired = []
     }
-    update() {
-        //this.x += 3 * this.direction;
+    update(delta) {
+        let delta_sec = delta / 100;
+        this.timer += delta_sec;
+        // CHANGE 5 TO RANDOM FOR offset shots
+        if(this.timer > 5.0)
+        {
+            this.timer = 0.0;
+            this.fire_shot();
+        }
     }
-
+    fire_shot()
+    {
+        if (this.faceCard)
+        {
+            console.log("big fire") 
+            this.proj = this.papa.add.sprite(this.x,this.y,this.papa.enemy_names[0])
+            this.papa.add.existing(this.proj)
+        }
+        else
+        {
+           console.log("mini fire") 
+        }
+    }
     switch_direction() {
         this.direction *= -1;
     }

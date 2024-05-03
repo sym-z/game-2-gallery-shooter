@@ -123,7 +123,7 @@ class Level extends Phaser.Scene {
             }
         }
         for (let e of this.enemies) {
-            e.update();
+            e.update(delta);
             /*if (e.x >= 800 || e.x <= 0)
             {
                 e.switch_direction();

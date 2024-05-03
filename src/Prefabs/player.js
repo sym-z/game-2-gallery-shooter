@@ -2,6 +2,7 @@ class Player extends Phaser.GameObjects.Sprite {
     constructor(scene, x,y, image, frame, left_key, right_key, player_speed) {
         super(scene , x, y, image, frame);
         this.name = "Jack"
+        this.health = 3;
         this.isJoker = true;
         scene.add.existing(this)
         this.left = left_key; 
