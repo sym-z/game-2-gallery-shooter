@@ -1,6 +1,7 @@
-class Level extends Phaser.Scene {
+class Crab extends Phaser.Scene
+{
     constructor() {
-        super("Level");
+        super("Crab");
         // Default player coords
         this.playerX = 400
         this.playerY = 500
@@ -135,16 +136,13 @@ class Level extends Phaser.Scene {
             
             this.scene.start("Level")
         }
-        for(let b of this.bulletGroup.children.entries)
-        {
-            if(!b.active && this.me.isJoker)
-            {
-                b.damage = 1;
-            }
-        }
     }
     check_end()
     {
+        for(let e of this.enemies)
+        {
+            console.log(e.alive);
+        }
         for(let e of this.enemies)
         {
             if (e.alive) return false;
@@ -193,7 +191,6 @@ class Level extends Phaser.Scene {
             this.me.bullet_type = enemy.original_id;
             this.bulletGroup.getFirstDead().damage = enemy.original_damage;
             this.me.setTexture(enemy.original_id)
-            this.me.isJoker = false;
             enemy.die();
         }
 
@@ -210,13 +207,10 @@ class Level extends Phaser.Scene {
                 bullet.y = this.me.y - 10;
                 console.log(bullet.damage)
             }
-            if (type != "Bullet") {
-                this.me.bullet_type = "Bullet"
-                this.me.setTexture("Joker")
-                this.me.isJoker = true;
-                this.bulletGroup.getFirstDead().damage = 1;
-            }
         }
-
+        if (type != "Bullet") {
+            this.me.bullet_type = "Bullet"
+            this.me.setTexture("Joker")
+        }
     }
 }

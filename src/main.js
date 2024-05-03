@@ -10,7 +10,7 @@ let config = {
     },
     width: 800,
     height: 600,
-    scene: [Level]
+    scene: [Level,Crab]
 }
 
 const game = new Phaser.Game(config);
