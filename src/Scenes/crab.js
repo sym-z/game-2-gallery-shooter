@@ -14,19 +14,44 @@ class Crab extends Phaser.Scene {
         this.player_speed = 5;
         this.bullet_speed = 5;
 
-        this.bullet_cooldown = 50;
+        this.bullet_cooldown = 10;
         this.bullet_cooldown_counter = 0;
         // All enemies on screen are stored in this array.
         this.enemies = [];
         this.enemy_names = [];
+        // Holds paths for each enemy.
+        this.curves = [];
+
+        this.points = [];
+        this.curve = null;
+
+        this.points1 = [];
+        this.curve1 = null;
+
+        this.points2 = [];
+        this.curve2 = null;
+
+        this.points3 = [];
+        this.curve3 = null;
+
+        this.points4 = [];
+        this.curve4 = null;
+
+        this.score = 0;
     }
 
     preload() {
         this.load.setPath("./assets/");
+        this.load.bitmapFont('pi', 'fonts/pi_0.png', 'fonts/pi.fnt');
         this.load.image("Joker", "large-cards/card_joker_black.png");
         this.load.image("Bullet", "small-cards/card_hearts_suit.png")
         this.load.image("Proj", "small-cards/card_clubs_suit.png")
-
+        this.load.image("dice1", "small-cards/dice_1.png")
+        this.load.image("dice2", "small-cards/dice_2.png")
+        this.load.image("dice3", "small-cards/dice_3.png")
+        this.load.image("dice4", "small-cards/dice_4.png")
+        this.load.image("dice5", "small-cards/dice_5.png")
+        this.load.image("dice6", "small-cards/dice_6.png")
 
         let card = "large-cards/card_";
         let deck = ["A", "02", "03", "04", "05", "06", "07", "08", "09", "10", "J", "Q", "K"]
@@ -47,21 +72,26 @@ class Crab extends Phaser.Scene {
     }
 
     create() {
+        this.generate_paths();
 
-        this.points =
-            [
-                100, 100,
-                0, 100,
-                200, 100,
-                200, 50
-            ];
-
-        this.curve = new Phaser.Curves.Spline(this.points);
+        this.title = this.add.bitmapText(400, 16, 'pi', 'Ante Up!', 32).setOrigin(0.5)
+        this.scoreText = this.add.bitmapText(128, 584, 'pi', 'Score: ' + this.score, 32).setOrigin(0.5);
+        this.healthText = this.add.bitmapText(600, 584, 'pi', 'Health: ', 32).setOrigin(0.5);
         // Create input keys
         this.create_keys(this);
 
         this.make_bullet_group(this);
 
+        this.health1 = this.add.sprite(760, 580, 'dice1')
+        this.health2 = this.add.sprite(720, 580, 'dice2')
+        this.health3 = this.add.sprite(680, 580, 'dice3')
+
+        this.health1.setScale(2)
+        this.health2.setScale(2)
+        this.health3.setScale(2)
+
+        this.health1.visible = false;
+        this.health2.visible = false;
         let obj =
         {
             from: 0,
@@ -70,13 +100,13 @@ class Crab extends Phaser.Scene {
             duration: 7000,
             ease: 'Sine.easeInOut',
             repeat: -1,
-            yoyo: true,
+            yoyo: false,
             rotateToPath: false,
             rotationOffset: -90
         }
         // Create all enemies, push them into an array
         for (let i = 0; i < this.num_enemies; i++) {
-            this.enemy = new Enemy(this, this.curve, 400 + i * 75, 300 - i * 75, this.enemy_names[i], this.enemy_names[i]);
+            this.enemy = new Enemy(this, this.curves[i], 400 + i * 75, 300 - i * 75, this.enemy_names[i], this.enemy_names[i]);
             this.enemy.startFollow(obj)
             this.enemies.push(this.enemy);
         }
@@ -110,42 +140,114 @@ class Crab extends Phaser.Scene {
         for (let e of this.enemies) {
             e.update(delta);
         }
-        if(this.check_end())
-        {
-            // CHANGE TO FIRST SCENE
-            this.restart();
+        if (this.check_end()) {
+            if (this.me.health <= 0) this.restart();
+            else {
+                this.scene.start("Crab")
+            }
         }
-        for(let b of this.bulletGroup.children.entries)
-        {
-            if(!b.active && this.me.isJoker)
-            {
+        for (let b of this.bulletGroup.children.entries) {
+            if (!b.active && this.me.isJoker) {
                 b.damage = 1;
             }
         }
+        if (this.me.health > 0) this.calculate_health();
     }
-    restart()
-    {
-        for (let e of this.enemies)
-        {
+    calculate_health() {
+        let h = this.me.health;
+        if (this.me.health > 12) {
+            this.health1.visible = true;
+            this.health2.visible = true;
+            let d1 = this.me.health % 12;
+            this.health1.setTexture("dice" + d1);
+            this.health2.setTexture("dice6")
+            this.health3.setTexture("dice6")
+
+        }
+        else if (this.me.health > 6) {
+            this.health1.visible = false;
+            this.health2.visible = true;
+            let d2 = this.me.health % 6
+            if (d2 == 0) d2 = 6;
+            this.health2.setTexture("dice" + d2)
+            this.health3.setTexture("dice6")
+        }
+        else {
+            this.health1.visible = false;
+            this.health2.visible = false;
+            let d3 = this.me.health % 6;
+            if (d3 == 0) d3 = 6;
+            this.health3.setTexture("dice" + d3)
+        }
+    }
+    generate_paths() {
+        this.points =
+            [
+                0, 0,
+                150, 0,
+                0, 0,
+                -320, 0,
+                0, 0
+            ];
+
+        this.curve = new Phaser.Curves.Spline(this.points);
+        this.curves.push(this.curve);
+
+        this.points1 =
+            [
+                150, 0,
+                0, 0,
+                -300, 0,
+                0, 0,
+                150, 0
+            ];
+
+        this.curve1 = new Phaser.Curves.Spline(this.points1);
+        this.curves.push(this.curve1);
+
+        this.points2 =
+            [
+                0, 0,
+                -400, 0,
+                -200, 0,
+                -100, 0,
+                0, 0
+            ];
+
+        this.curve2 = new Phaser.Curves.Spline(this.points2);
+        this.curves.push(this.curve2);
+
+        this.points3 =
+            [
+                0, 0,
+                150, 0,
+                0, 0,
+                -320, 0,
+                0, 0
+            ];
+
+        this.curve3 = new Phaser.Curves.Spline(this.points3);
+        this.curves.push(this.curve3);
+
+
+    }
+    restart() {
+        for (let e of this.enemies) {
             e.die();
         }
         this.scene.restart()
 
     }
-    check_end()
-    {
-        if(this.me.health <= 0)
-        {
+    check_end() {
+        if (this.me.health <= 0) {
             return true;
         }
-        for(let e of this.enemies)
-        {
+        for (let e of this.enemies) {
             if (e.alive) return false;
         }
         return true;
     }
-    make_bullet_group(scene)
-    {
+    make_bullet_group(scene) {
         // Make bullet group
         scene.bulletGroup = scene.add.group
             ({
@@ -211,6 +313,8 @@ class Crab extends Phaser.Scene {
             this.me.health += enemy.original_damage;
             this.me.isJoker = false;
             enemy.die();
+            this.score += 100;
+            this.scoreText.setText("Score: " + this.score)
         }
 
     }
@@ -229,12 +333,10 @@ class Crab extends Phaser.Scene {
             if (type != "Bullet") {
                 this.me.bullet_type = "Bullet"
                 this.me.setTexture("Joker")
-                if(this.me.health - bullet.damage > 0)
-                {
+                if (this.me.health - bullet.damage > 0) {
                     this.me.health -= bullet.damage;
                 }
-                else
-                {
+                else {
                     this.me.health = 1;
                 }
                 this.me.isJoker = true;

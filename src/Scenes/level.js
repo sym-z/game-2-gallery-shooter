@@ -14,7 +14,7 @@ class Level extends Phaser.Scene {
         this.player_speed = 5;
         this.bullet_speed = 5;
 
-        this.bullet_cooldown = 50;
+        this.bullet_cooldown = 10;
         this.bullet_cooldown_counter = 0;
         // All enemies on screen are stored in this array.
         this.enemies = [];
@@ -36,14 +36,22 @@ class Level extends Phaser.Scene {
 
         this.points4 = [];
         this.curve4 = null;
+
+        this.score = 0;
     }
 
     preload() {
         this.load.setPath("./assets/");
+        this.load.bitmapFont('pi', 'fonts/pi_0.png', 'fonts/pi.fnt');
         this.load.image("Joker", "large-cards/card_joker_black.png");
         this.load.image("Bullet", "small-cards/card_hearts_suit.png")
         this.load.image("Proj", "small-cards/card_clubs_suit.png")
-
+        this.load.image("dice1", "small-cards/dice_1.png")
+        this.load.image("dice2", "small-cards/dice_2.png")
+        this.load.image("dice3", "small-cards/dice_3.png")
+        this.load.image("dice4", "small-cards/dice_4.png")
+        this.load.image("dice5", "small-cards/dice_5.png")
+        this.load.image("dice6", "small-cards/dice_6.png")
 
         let card = "large-cards/card_";
         let deck = ["A", "02", "03", "04", "05", "06", "07", "08", "09", "10", "J", "Q", "K"]
@@ -66,11 +74,24 @@ class Level extends Phaser.Scene {
     create() {
         this.generate_paths();
 
+        this.title = this.add.bitmapText(400,16,'pi','Ante Up!', 32).setOrigin(0.5)
+        this.scoreText = this.add.bitmapText(128,584,'pi', 'Score: ' + this.score, 32).setOrigin(0.5);
+        this.healthText = this.add.bitmapText(600,584,'pi', 'Health: ', 32).setOrigin(0.5);
         // Create input keys
         this.create_keys(this);
 
         this.make_bullet_group(this);
 
+        this.health1 = this.add.sprite(760,580,'dice1')
+        this.health2 = this.add.sprite(720,580,'dice2')
+        this.health3 = this.add.sprite(680,580,'dice3')
+
+        this.health1.setScale(2)
+        this.health2.setScale(2)
+        this.health3.setScale(2)
+
+        this.health1.visible = false;
+        this.health2.visible = false;
         let obj =
         {
             from: 0,
@@ -134,6 +155,38 @@ class Level extends Phaser.Scene {
                 b.damage = 1;
             }
         }
+        if(this.me.health > 0) this.calculate_health();
+    }
+    calculate_health()
+    {
+        let h = this.me.health;
+        if (this.me.health > 12)
+        {
+            this.health1.visible = true;
+            this.health2.visible = true;
+            let d1 = this.me.health % 12;
+            this.health1.setTexture("dice"+d1);
+            this.health2.setTexture("dice6")
+            this.health3.setTexture("dice6")
+
+        }
+        else if (this.me.health > 6)
+        {
+            this.health1.visible = false;
+            this.health2.visible = true;
+            let d2 = this.me.health % 6
+            if (d2 == 0) d2 = 6;
+            this.health2.setTexture("dice"+d2)
+            this.health3.setTexture("dice6")
+        }
+        else
+        {
+            this.health1.visible = false;
+            this.health2.visible = false;
+            let d3 = this.me.health % 6;
+            if(d3 == 0) d3 = 6;
+            this.health3.setTexture("dice"+d3)
+        }
     }
     generate_paths()
     {
@@ -164,10 +217,10 @@ class Level extends Phaser.Scene {
         this.points2 =
         [
             0, 0,
-            0, 0,
-            0, 0,
-            0, 0,
-            400,0
+            -400, 0,
+            -200, 0,
+            -100, 0,
+            0,0
         ];
         
         this.curve2 = new Phaser.Curves.Spline(this.points2);
@@ -275,6 +328,8 @@ class Level extends Phaser.Scene {
             this.me.health += enemy.original_damage;
             this.me.isJoker = false;
             enemy.die();
+            this.score += 100;
+            this.scoreText.setText("Score: " + this.score)
         }
 
     }
