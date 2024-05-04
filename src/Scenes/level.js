@@ -19,6 +19,23 @@ class Level extends Phaser.Scene {
         // All enemies on screen are stored in this array.
         this.enemies = [];
         this.enemy_names = [];
+        // Holds paths for each enemy.
+        this.curves = [];
+
+        this.points = [];
+        this.curve = null;
+
+        this.points1 = [];
+        this.curve1 = null;
+
+        this.points2 = [];
+        this.curve2 = null;
+
+        this.points3 = [];
+        this.curve3 = null;
+
+        this.points4 = [];
+        this.curve4 = null;
     }
 
     preload() {
@@ -47,16 +64,8 @@ class Level extends Phaser.Scene {
     }
 
     create() {
+        this.generate_paths();
 
-        this.points =
-            [
-                200, 0,
-                400, 0,
-                200, 0,
-                -200, 0
-            ];
-
-        this.curve = new Phaser.Curves.Spline(this.points);
         // Create input keys
         this.create_keys(this);
 
@@ -70,13 +79,13 @@ class Level extends Phaser.Scene {
             duration: 7000,
             ease: 'Sine.easeInOut',
             repeat: -1,
-            yoyo: true,
+            yoyo: false,
             rotateToPath: false,
             rotationOffset: -90
         }
         // Create all enemies, push them into an array
         for (let i = 0; i < this.num_enemies; i++) {
-            this.enemy = new Enemy(this, this.curve, 400 + i * 75, 300 - i * 75, this.enemy_names[i], this.enemy_names[i]);
+            this.enemy = new Enemy(this, this.curves[i], 400 + i * 75, 300 - i * 75, this.enemy_names[i], this.enemy_names[i]);
             this.enemy.startFollow(obj)
             this.enemies.push(this.enemy);
         }
@@ -125,6 +134,58 @@ class Level extends Phaser.Scene {
                 b.damage = 1;
             }
         }
+    }
+    generate_paths()
+    {
+        this.points =
+        [
+            0, 0,
+            150, 0,
+            0, 0,
+            -320, 0,
+            0,0
+        ];
+        
+        this.curve = new Phaser.Curves.Spline(this.points);
+        this.curves.push(this.curve);
+        
+        this.points1 =
+        [
+            150, 0,
+            0, 0,
+            -300, 0,
+            0, 0,
+            150,0
+        ];
+        
+        this.curve1 = new Phaser.Curves.Spline(this.points1);
+        this.curves.push(this.curve1);
+
+        this.points2 =
+        [
+            0, 0,
+            0, 0,
+            0, 0,
+            0, 0,
+            400,0
+        ];
+        
+        this.curve2 = new Phaser.Curves.Spline(this.points2);
+        this.curves.push(this.curve2);
+
+        this.points3 =
+        [
+            0, 0,
+            150, 0,
+            0, 0,
+            -320, 0,
+            0,0
+        ];
+        
+        this.curve3 = new Phaser.Curves.Spline(this.points3);
+        this.curves.push(this.curve3);
+
+        
     }
     restart()
     {
