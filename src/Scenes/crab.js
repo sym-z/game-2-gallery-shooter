@@ -57,7 +57,7 @@ class Crab extends Phaser.Scene {
          this.load.audio("laser", "audio/laserRetro_002.ogg")
          this.load.audio("cardFire", "audio/cardPlace1.ogg")
          this.load.audio("cardDeath", "audio/cardFan1.ogg")
-         this.load.audio("bigLaser", "audio/LaserLarge_000.ogg")
+         this.load.audio("bigLaser", "audio/laserLarge_000.ogg")
  
          let card = "large-cards/card_";
          let deck = ["A", "02", "03", "04", "05", "06", "07", "08", "09", "10", "J", "Q", "K"]
