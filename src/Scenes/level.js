@@ -152,7 +152,7 @@ class Level extends Phaser.Scene {
             if(this.me.health <= 0) this.restart();
             else
             {
-                this.scene.start("Crab")
+                this.scene.start("CrabStart")
             }
         }
         for(let b of this.bulletGroup.children.entries)

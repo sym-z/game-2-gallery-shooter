@@ -38,7 +38,7 @@ class Crab extends Phaser.Scene {
          this.curve4 = null;
  
          this.score = 0;
-         this.d = 0
+        // this.d = 0
      }
  
      preload() {
@@ -125,9 +125,9 @@ class Crab extends Phaser.Scene {
      }
  
      update(time, delta) {
-        this.d += delta;
+        //this.d += delta;
         // PAUSE THE GAME OR LOAD SCENE FOR A SEC
-        while(this.d < 3000000)
+        /*while(this.d < 3000000)
         {
             // SET LEVEL TEXT TO VISIBLE
             console.log(this.d)
@@ -136,7 +136,7 @@ class Crab extends Phaser.Scene {
             {
                 e.setActive(false)
             }
-        }
+        }*/
         for(let e of this.enemies)
         {
             // SET LEVEL TEXT TO INVISIBLE
@@ -171,7 +171,7 @@ class Crab extends Phaser.Scene {
              if(this.me.health <= 0) this.restart();
              else
              {
-                 this.scene.start("Crab")
+                 this.scene.start("CrabStart")
              }
          }
          for(let b of this.bulletGroup.children.entries)
@@ -291,6 +291,7 @@ class Crab extends Phaser.Scene {
      {
          if(this.me.health <= 0)
          {
+            this.globals.score = 0;
              return true;
          }
          for(let e of this.enemies)
