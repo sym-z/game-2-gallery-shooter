@@ -121,12 +121,15 @@ class Crab extends Phaser.Scene {
  
          // Create player
          this.me = new Player(this, this.playerX, this.playerY, "Joker", null, this.left, this.right, this.player_speed).setOrigin(0.5);
+         this.d = 0;
      }
  
      update(time, delta) {
         this.d += delta;
-        while(this.d < 30000)
+        // PAUSE THE GAME OR LOAD SCENE FOR A SEC
+        while(this.d < 3000000)
         {
+            // SET LEVEL TEXT TO VISIBLE
             console.log(this.d)
             this.d+=delta
             for(let e of this.enemies)
@@ -136,6 +139,7 @@ class Crab extends Phaser.Scene {
         }
         for(let e of this.enemies)
         {
+            // SET LEVEL TEXT TO INVISIBLE
             e.setActive(true)
         }
          console.log(this.me.health)
