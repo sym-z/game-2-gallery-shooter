@@ -53,6 +53,11 @@ class Level extends Phaser.Scene {
         this.load.image("dice5", "small-cards/dice_5.png")
         this.load.image("dice6", "small-cards/dice_6.png")
 
+        this.load.audio("laser", "audio/laserRetro_002.ogg")
+        this.load.audio("cardFire", "audio/cardPlace1.ogg")
+        this.load.audio("cardDeath", "audio/cardFan1.ogg")
+        this.load.audio("bigLaser", "audio/LaserLarge_000.ogg")
+
         let card = "large-cards/card_";
         let deck = ["A", "02", "03", "04", "05", "06", "07", "08", "09", "10", "J", "Q", "K"]
         let suits = ["diamonds", "clubs", "spades", "hearts"]
@@ -72,6 +77,8 @@ class Level extends Phaser.Scene {
     }
 
     create() {
+        this.globals = this.scene.get("Global");
+        this.score = this.globals.score 
         this.generate_paths();
 
         this.title = this.add.bitmapText(400,16,'pi','Ante Up!', 32).setOrigin(0.5)
@@ -157,6 +164,10 @@ class Level extends Phaser.Scene {
         }
         if(this.me.health > 0) this.calculate_health();
     }
+    update_score(num)
+    {
+        this.globals.score += num;
+    }
     calculate_health()
     {
         let h = this.me.health;
@@ -187,6 +198,14 @@ class Level extends Phaser.Scene {
             if(d3 == 0) d3 = 6;
             this.health3.setTexture("dice"+d3)
         }
+    }
+    card_noise()
+    { 
+        this.sound.play("cardFire")
+    }
+    card_death()
+    {
+        this.sound.play("cardDeath")
     }
     generate_paths()
     {
@@ -253,6 +272,7 @@ class Level extends Phaser.Scene {
     {
         if(this.me.health <= 0)
         {
+            this.globals.score = 0
             return true;
         }
         for(let e of this.enemies)
@@ -327,9 +347,18 @@ class Level extends Phaser.Scene {
             this.me.setTexture(enemy.original_id)
             this.me.health += enemy.original_damage;
             this.me.isJoker = false;
+            this.card_death();
             enemy.die();
-            this.score += 100;
-            this.scoreText.setText("Score: " + this.score)
+            if(enemy.faceCard)
+            {
+                this.update_score(100)
+            }
+            else
+            {
+                this.update_score(50)
+            }
+
+            this.scoreText.setText("Score: " + this.globals.score)
         }
 
     }
@@ -346,6 +375,7 @@ class Level extends Phaser.Scene {
                 console.log(bullet.damage)
             }
             if (type != "Bullet") {
+                this.sound.play("bigLaser")
                 this.me.bullet_type = "Bullet"
                 this.me.setTexture("Joker")
                 if(this.me.health - bullet.damage > 0)
@@ -358,6 +388,11 @@ class Level extends Phaser.Scene {
                 }
                 this.me.isJoker = true;
                 this.bulletGroup.getFirstDead().damage = 1;
+            }
+            else
+            {
+
+                this.sound.play("laser")
             }
         }
 

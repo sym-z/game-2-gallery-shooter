@@ -34,6 +34,7 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         }
     }
     update(delta) {
+
         let delta_sec = delta / 100;
         this.timer += delta_sec;
         // CHANGE 5 TO RANDOM FOR offset shots
@@ -94,6 +95,8 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         // Destroy every shot on the screen, used when level restarts
         for(let f of this.shots_fired)
         {
+            f.x = 2000;
+            f.y = 2000;
             f.destroy();
         }
     }
@@ -115,7 +118,9 @@ class Enemy extends Phaser.GameObjects.PathFollower {
                 this.papa.add.existing(this.proj)
                 this.shots_fired.push(this.proj)
             }
+            this.papa.card_noise();
         }
+
     }
     calc_damage() {
         switch (this.card) {
@@ -216,5 +221,6 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         this.active = false;
         this.clear_shots();
         console.log(this.card, " has died.")
+        this.destroy()
     }
 }
