@@ -38,6 +38,7 @@ class Crab extends Phaser.Scene {
          this.curve4 = null;
  
          this.score = 0;
+         this.d = 0
      }
  
      preload() {
@@ -123,6 +124,20 @@ class Crab extends Phaser.Scene {
      }
  
      update(time, delta) {
+        this.d += delta;
+        while(this.d < 30000)
+        {
+            console.log(this.d)
+            this.d+=delta
+            for(let e of this.enemies)
+            {
+                e.setActive(false)
+            }
+        }
+        for(let e of this.enemies)
+        {
+            e.setActive(true)
+        }
          console.log(this.me.health)
          this.bullet_cooldown_counter--;
  
