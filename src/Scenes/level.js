@@ -112,15 +112,15 @@ class Level extends Phaser.Scene {
             rotateToPath: false,
             rotationOffset: -90
         }
+
+        // Create player
+        this.me = new Player(this, this.playerX, this.playerY, "Joker", null, this.left, this.right, this.player_speed).setOrigin(0.5);
         // Create all enemies, push them into an array
         for (let i = 0; i < this.num_enemies; i++) {
             this.enemy = new Enemy(this, this.curves[i], 400 , 300 - i * 75, this.enemy_names[i], this.enemy_names[i]);
             this.enemy.startFollow(obj)
             this.enemies.push(this.enemy);
         }
-
-        // Create player
-        this.me = new Player(this, this.playerX, this.playerY, "Joker", null, this.left, this.right, this.player_speed).setOrigin(0.5);
     }
 
     update(time, delta) {
@@ -226,9 +226,9 @@ class Level extends Phaser.Scene {
         this.points =
         [
             0, 0,
-            200, 0,
+            -200, 40,
             0, 0,
-            -200, 0,
+            200, -40,
             0,0
         ];
         
@@ -238,9 +238,9 @@ class Level extends Phaser.Scene {
         this.points1 =
         [
             0, 0,
-            -200, 0,
+            200, -40,
             0, 0,
-            200, 0,
+            -200, 40,
             0,0
         ];
         
@@ -250,9 +250,9 @@ class Level extends Phaser.Scene {
         this.points2 =
         [
             0, 0,
-            200, 0,
+            -200, 40,
             0, 0,
-            -200, 0,
+            200, -40,
             0,0
         ];
         
@@ -262,9 +262,9 @@ class Level extends Phaser.Scene {
         this.points3 =
         [
             0, 0,
-            -200, 0,
+            200, -40,
             0, 0,
-            200, 0,
+            -200, 40,
             0,0
         ];
         
@@ -344,7 +344,6 @@ class Level extends Phaser.Scene {
     }
 
     hit_card(bullet, enemy) {
-        enemy.update();
         let diff = enemy.damage - bullet.damage;
         if (diff > 0) {
             let new_id = "large-cards/card_" + enemy.suit + "_" + enemy.calc_card(diff) + ".png";
@@ -353,7 +352,7 @@ class Level extends Phaser.Scene {
             enemy.damage = diff;
             enemy.card = enemy.calc_card();
             console.log("ENEMY ID: " + new_id)
-            enemy.setTexture(new_id)
+            enemy.setTexture(new_id, 0)
             bullet.damage = 1;
         }
         else {
@@ -375,7 +374,6 @@ class Level extends Phaser.Scene {
 
             this.scoreText.setText("Score: " + this.globals.score)
         }
-        enemy.update();
     }
 
     fire_projectile(type = "Bullet") {
