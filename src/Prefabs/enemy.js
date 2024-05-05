@@ -32,7 +32,6 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         {
             this.proj_damage = 1;
         }
-        this.fire_shot();
     }
 
     update(delta) {
