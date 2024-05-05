@@ -113,7 +113,7 @@ class Level extends Phaser.Scene {
         }
         // Create all enemies, push them into an array
         for (let i = 0; i < this.num_enemies; i++) {
-            this.enemy = new Enemy(this, this.curves[i], 400 + i * 75, 300 - i * 75, this.enemy_names[i], this.enemy_names[i]);
+            this.enemy = new Enemy(this, this.curves[i], 400 , 300 - i * 75, this.enemy_names[i], this.enemy_names[i]);
             this.enemy.startFollow(obj)
             this.enemies.push(this.enemy);
         }
@@ -152,7 +152,8 @@ class Level extends Phaser.Scene {
             if(this.me.health <= 0) this.scene.start("End");
             else
             {
-                this.scene.start("CrabStart")
+                // SHOULD BE THE ONLY DIFFERENCE BETWEEN LEVELS
+                this.scene.start("Crab")
             }
         }
         for(let b of this.bulletGroup.children.entries)
@@ -212,9 +213,9 @@ class Level extends Phaser.Scene {
         this.points =
         [
             0, 0,
-            150, 0,
             0, 0,
-            -320, 0,
+            0, 0,
+            0, 0,
             0,0
         ];
         
@@ -223,11 +224,11 @@ class Level extends Phaser.Scene {
         
         this.points1 =
         [
-            150, 0,
             0, 0,
-            -300, 0,
             0, 0,
-            150,0
+            0, 0,
+            0, 0,
+            0,0
         ];
         
         this.curve1 = new Phaser.Curves.Spline(this.points1);
@@ -236,9 +237,9 @@ class Level extends Phaser.Scene {
         this.points2 =
         [
             0, 0,
-            -400, 0,
-            -200, 0,
-            -100, 0,
+            0, 0,
+            0, 0,
+            0, 0,
             0,0
         ];
         
@@ -248,9 +249,9 @@ class Level extends Phaser.Scene {
         this.points3 =
         [
             0, 0,
-            150, 0,
             0, 0,
-            -320, 0,
+            0, 0,
+            0, 0,
             0,0
         ];
         

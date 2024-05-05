@@ -113,7 +113,7 @@ class Crab extends Phaser.Scene {
         }
         // Create all enemies, push them into an array
         for (let i = 0; i < this.num_enemies; i++) {
-            this.enemy = new Enemy(this, this.curves[i], 400 + i * 75, 300 - i * 75, this.enemy_names[i], this.enemy_names[i]);
+            this.enemy = new Enemy(this, this.curves[i], 400 , 300 - i * 75, this.enemy_names[i], this.enemy_names[i]);
             this.enemy.startFollow(obj)
             this.enemies.push(this.enemy);
         }
@@ -152,6 +152,7 @@ class Crab extends Phaser.Scene {
             if(this.me.health <= 0) this.scene.start("End");
             else
             {
+                // SHOULD BE THE ONLY DIFFERENCE BETWEEN LEVELS
                 this.scene.start("Win")
             }
         }
