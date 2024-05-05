@@ -149,7 +149,7 @@ class Level extends Phaser.Scene {
         }
         if(this.check_end())
         {
-            if(this.me.health <= 0) this.restart();
+            if(this.me.health <= 0) this.scene.start("End");
             else
             {
                 this.scene.start("CrabStart")
@@ -272,7 +272,6 @@ class Level extends Phaser.Scene {
     {
         if(this.me.health <= 0)
         {
-            this.globals.score = 0
             return true;
         }
         for(let e of this.enemies)

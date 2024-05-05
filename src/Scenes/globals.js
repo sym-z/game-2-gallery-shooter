@@ -6,6 +6,6 @@ class Global extends Phaser.Scene
     }
     create()
     {
-        this.scene.start("Level")
+        this.scene.start("Start")
     }
 }
