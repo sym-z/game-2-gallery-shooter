@@ -11,7 +11,7 @@ let config = {
     width: 800,
     height: 600,
     backgroundColor: '#008100',
-    scene: [Global,Start,Level,CrabStart,Crab,End,Win]
+    scene: [Global,Start,Level,CrabStart,Crab,LobsterStart,Lobster,End,Win]
 }
 
 const game = new Phaser.Game(config);

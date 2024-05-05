@@ -23,7 +23,7 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         // Player's Position
         this.playerY = null;
         this.playerX = null;
-        
+        this.score_value = this.damage * 100;
         if (this.faceCard)
         {
             this.proj_damage = this.damage;
@@ -33,6 +33,7 @@ class Enemy extends Phaser.GameObjects.PathFollower {
             this.proj_damage = 1;
         }
     }
+
     update(delta) {
 
         let delta_sec = delta / 100;
@@ -84,6 +85,7 @@ class Enemy extends Phaser.GameObjects.PathFollower {
                     // CHANGE THIS TO DAMAGE NUMBER
                     console.log(this.proj_damage)
                     this.papa.me.health -= this.proj_damage; 
+                    this.papa.hit_sound() 
                 }
             }
 

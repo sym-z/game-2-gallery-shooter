@@ -14,7 +14,7 @@ class Crab extends Phaser.Scene {
         this.player_speed = 5;
         this.bullet_speed = 5;
 
-        this.bullet_cooldown = 10;
+        this.bullet_cooldown = 20;
         this.bullet_cooldown_counter = 0;
         // All enemies on screen are stored in this array.
         this.enemies = [];
@@ -57,6 +57,7 @@ class Crab extends Phaser.Scene {
         this.load.audio("cardFire", "audio/cardPlace1.ogg")
         this.load.audio("cardDeath", "audio/cardFan1.ogg")
         this.load.audio("bigLaser", "audio/laserLarge_000.ogg")
+        this.load.audio("hit", "audio/hit.ogg")
 
         let card = "large-cards/card_";
         let deck = ["A", "02", "03", "04", "05", "06", "07", "08", "09", "10", "J", "Q", "K"]
@@ -123,7 +124,7 @@ class Crab extends Phaser.Scene {
     }
 
     update(time, delta) {
-        console.log(this.me.health)
+        //console.log(this.me.health)
         this.bullet_cooldown_counter--;
 
         if (this.fire.isDown) {
@@ -149,11 +150,19 @@ class Crab extends Phaser.Scene {
         }
         if(this.check_end())
         {
-            if(this.me.health <= 0) this.scene.start("End");
+            if(this.me.health <= 0)
+            { 
+                for (let e of this.enemies)
+                    {
+                        e.clear_shots();
+                        e.destroy();
+                    }
+                this.scene.start("End");
+            }
             else
             {
                 // SHOULD BE THE ONLY DIFFERENCE BETWEEN LEVELS
-                this.scene.start("Win")
+                this.scene.start("LobsterStart")
             }
         }
         for(let b of this.bulletGroup.children.entries)
@@ -164,6 +173,10 @@ class Crab extends Phaser.Scene {
             }
         }
         if(this.me.health > 0) this.calculate_health();
+    }
+    hit_sound()
+    {
+        this.sound.play("hit")
     }
     update_score(num)
     {
@@ -213,9 +226,9 @@ class Crab extends Phaser.Scene {
         this.points =
         [
             0, 0,
-            0, 0,
-            0, 0,
-            0, 0,
+            200, 0,
+            200, -100,
+            200, 0,
             0,0
         ];
         
@@ -225,9 +238,9 @@ class Crab extends Phaser.Scene {
         this.points1 =
         [
             0, 0,
-            0, 0,
-            0, 0,
-            0, 0,
+            -200, 0,
+            -200, -100,
+            -200, 0,
             0,0
         ];
         
@@ -237,9 +250,9 @@ class Crab extends Phaser.Scene {
         this.points2 =
         [
             0, 0,
-            0, 0,
-            0, 0,
-            0, 0,
+            200, 0,
+            200, 100,
+            200, 0,
             0,0
         ];
         
@@ -249,9 +262,9 @@ class Crab extends Phaser.Scene {
         this.points3 =
         [
             0, 0,
-            0, 0,
-            0, 0,
-            0, 0,
+            -200, 0,
+            -200, 100,
+            -200, 0,
             0,0
         ];
         
@@ -331,6 +344,7 @@ class Crab extends Phaser.Scene {
     }
 
     hit_card(bullet, enemy) {
+        enemy.update()
         let diff = enemy.damage - bullet.damage;
         if (diff > 0) {
             let new_id = "large-cards/card_" + enemy.suit + "_" + enemy.calc_card(diff) + ".png";
@@ -338,6 +352,7 @@ class Crab extends Phaser.Scene {
             enemy.name = enemy.id.replace("large-cards/card_", "").replace(".png", "");
             enemy.damage = diff;
             enemy.card = enemy.calc_card();
+            console.log("ENEMY ID: " + new_id)
             enemy.setTexture(new_id)
             bullet.damage = 1;
         }
@@ -351,16 +366,16 @@ class Crab extends Phaser.Scene {
             enemy.die();
             if(enemy.faceCard)
             {
-                this.update_score(100)
+                this.update_score(enemy.score_value)
             }
             else
             {
-                this.update_score(50)
+                this.update_score(enemy.score_value)
             }
 
             this.scoreText.setText("Score: " + this.globals.score)
         }
-
+        enemy.update();
     }
 
     fire_projectile(type = "Bullet") {
@@ -372,7 +387,7 @@ class Crab extends Phaser.Scene {
                 bullet.setTexture(type)
                 bullet.x = this.me.x;
                 bullet.y = this.me.y - 10;
-                console.log(bullet.damage)
+                //console.log(bullet.damage)
             }
             if (type != "Bullet") {
                 this.sound.play("bigLaser")
@@ -388,6 +403,10 @@ class Crab extends Phaser.Scene {
                 }
                 this.me.isJoker = true;
                 this.bulletGroup.getFirstDead().damage = 1;
+                if (this.me.health > 3)
+                    {
+                        this.me.health = 3;
+                    }
             }
             else
             {
