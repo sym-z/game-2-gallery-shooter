@@ -20,7 +20,7 @@ class Win extends Phaser.Scene
     update(delta) {
         if (this.enter.isDown) {
             this.globals.score = 0;
-            this.scene.start("Level")
+            this.scene.start("Start")
         }
 
     }
