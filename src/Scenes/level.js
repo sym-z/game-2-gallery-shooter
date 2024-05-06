@@ -79,20 +79,20 @@ class Level extends Phaser.Scene {
 
     create() {
         this.globals = this.scene.get("Global");
-        this.score = this.globals.score 
+        this.score = this.globals.score
         this.generate_paths();
 
-        this.title = this.add.bitmapText(400,16,'pi','Ante Up!', 32).setOrigin(0.5)
-        this.scoreText = this.add.bitmapText(128,584,'pi', 'Score: ' + this.score, 32).setOrigin(0.5);
-        this.healthText = this.add.bitmapText(600,584,'pi', 'Health: ', 32).setOrigin(0.5);
+        this.title = this.add.bitmapText(400, 16, 'pi', 'Ante Up!', 32).setOrigin(0.5)
+        this.scoreText = this.add.bitmapText(128, 584, 'pi', 'Score: ' + this.score, 32).setOrigin(0.5);
+        this.healthText = this.add.bitmapText(600, 584, 'pi', 'Health: ', 32).setOrigin(0.5);
         // Create input keys
         this.create_keys(this);
 
         this.make_bullet_group(this);
 
-        this.health1 = this.add.sprite(760,580,'dice1')
-        this.health2 = this.add.sprite(720,580,'dice2')
-        this.health3 = this.add.sprite(680,580,'dice3')
+        this.health1 = this.add.sprite(760, 580, 'dice1')
+        this.health2 = this.add.sprite(720, 580, 'dice2')
+        this.health3 = this.add.sprite(680, 580, 'dice3')
 
         this.health1.setScale(2)
         this.health2.setScale(2)
@@ -117,7 +117,7 @@ class Level extends Phaser.Scene {
         this.me = new Player(this, this.playerX, this.playerY, "Joker", null, this.left, this.right, this.player_speed).setOrigin(0.5);
         // Create all enemies, push them into an array
         for (let i = 0; i < this.num_enemies; i++) {
-            this.enemy = new Enemy(this, this.curves[i], 400 , 300 - i * 75, this.enemy_names[i], this.enemy_names[i]);
+            this.enemy = new Enemy(this, this.curves[i], 400, 300 - i * 75, this.enemy_names[i], this.enemy_names[i]);
             if (this.enemy.scene == undefined) console.log("UNDEFINED ENEMY")
             this.enemy.startFollow(obj)
             this.enemies.push(this.enemy);
@@ -149,154 +149,133 @@ class Level extends Phaser.Scene {
         for (let e of this.enemies) {
             e.update(delta);
         }
-        if(this.check_end())
-        {
-            if(this.me.health <= 0)
-            { 
-                for (let e of this.enemies)
-                    {
-                        e.clear_shots();
-                        e.destroy();
-                    }
+        if (this.check_end()) {
+            if (this.me.health <= 0) {
+                for (let e of this.enemies) {
+                    e.clear_shots();
+                    e.destroy();
+                }
                 this.scene.start("End");
             }
-            else
-            {
+            else {
                 // SHOULD BE THE ONLY DIFFERENCE BETWEEN LEVELS
                 this.scene.start("CrabStart")
             }
         }
-        for(let b of this.bulletGroup.children.entries)
-        {
-            if(!b.active && this.me.isJoker)
-            {
+        for (let b of this.bulletGroup.children.entries) {
+            if (!b.active && this.me.isJoker) {
                 b.damage = 1;
             }
         }
-        if(this.me.health > 0) this.calculate_health();
+        if (this.me.health > 0) this.calculate_health();
     }
-    hit_sound()
-    {
+    hit_sound() {
         this.sound.play("hit")
     }
-    update_score(num)
-    {
+    update_score(num) {
         this.globals.score += num;
     }
-    calculate_health()
-    {
+    calculate_health() {
         let h = this.me.health;
-        if (this.me.health > 12)
-        {
+        if (this.me.health > 12) {
             this.health1.visible = true;
             this.health2.visible = true;
             let d1 = this.me.health % 12;
-            this.health1.setTexture("dice"+d1);
+            this.health1.setTexture("dice" + d1);
             this.health2.setTexture("dice6")
             this.health3.setTexture("dice6")
 
         }
-        else if (this.me.health > 6)
-        {
+        else if (this.me.health > 6) {
             this.health1.visible = false;
             this.health2.visible = true;
             let d2 = this.me.health % 6
             if (d2 == 0) d2 = 6;
-            this.health2.setTexture("dice"+d2)
+            this.health2.setTexture("dice" + d2)
             this.health3.setTexture("dice6")
         }
-        else
-        {
+        else {
             this.health1.visible = false;
             this.health2.visible = false;
             let d3 = this.me.health % 6;
-            if(d3 == 0) d3 = 6;
-            this.health3.setTexture("dice"+d3)
+            if (d3 == 0) d3 = 6;
+            this.health3.setTexture("dice" + d3)
         }
     }
-    card_noise()
-    { 
+    card_noise() {
         this.sound.play("cardFire")
     }
-    card_death()
-    {
+    card_death() {
         this.sound.play("cardDeath")
     }
-    generate_paths()
-    {
+    generate_paths() {
         this.points =
-        [
-            0, 0,
-            -200, 40,
-            0, 0,
-            200, -40,
-            0,0
-        ];
-        
+            [
+                0, 0,
+                -200, 40,
+                0, 0,
+                200, -40,
+                0, 0
+            ];
+
         this.curve = new Phaser.Curves.Spline(this.points);
         this.curves.push(this.curve);
-        
+
         this.points1 =
-        [
-            0, 0,
-            200, -40,
-            0, 0,
-            -200, 40,
-            0,0
-        ];
-        
+            [
+                0, 0,
+                200, -40,
+                0, 0,
+                -200, 40,
+                0, 0
+            ];
+
         this.curve1 = new Phaser.Curves.Spline(this.points1);
         this.curves.push(this.curve1);
 
         this.points2 =
-        [
-            0, 0,
-            -200, 40,
-            0, 0,
-            200, -40,
-            0,0
-        ];
-        
+            [
+                0, 0,
+                -200, 40,
+                0, 0,
+                200, -40,
+                0, 0
+            ];
+
         this.curve2 = new Phaser.Curves.Spline(this.points2);
         this.curves.push(this.curve2);
 
         this.points3 =
-        [
-            0, 0,
-            200, -40,
-            0, 0,
-            -200, 40,
-            0,0
-        ];
-        
+            [
+                0, 0,
+                200, -40,
+                0, 0,
+                -200, 40,
+                0, 0
+            ];
+
         this.curve3 = new Phaser.Curves.Spline(this.points3);
         this.curves.push(this.curve3);
 
-        
+
     }
-    restart()
-    {
-        for (let e of this.enemies)
-        {
+    restart() {
+        for (let e of this.enemies) {
             e.die();
         }
         this.scene.restart()
 
     }
-    check_end()
-    {
-        if(this.me.health <= 0)
-        {
+    check_end() {
+        if (this.me.health <= 0) {
             return true;
         }
-        for(let e of this.enemies)
-        {
+        for (let e of this.enemies) {
             if (e.alive) return false;
         }
         return true;
     }
-    make_bullet_group(scene)
-    {
+    make_bullet_group(scene) {
         // Make bullet group
         scene.bulletGroup = scene.add.group
             ({
@@ -352,8 +331,10 @@ class Level extends Phaser.Scene {
             enemy.name = enemy.id.replace("large-cards/card_", "").replace(".png", "");
             enemy.damage = diff;
             enemy.card = enemy.calc_card();
-            console.log("ENEMY ID: " + new_id)
             if (enemy.scene != undefined && enemy != null && enemy.scene.sys != undefined) enemy.setTexture(new_id, 0)
+            else {
+                console.log("Caught undefined error")
+            }
             bullet.damage = 1;
         }
         else {
@@ -364,12 +345,10 @@ class Level extends Phaser.Scene {
             this.me.isJoker = false;
             this.card_death();
             enemy.die();
-            if(enemy.faceCard)
-            {
+            if (enemy.faceCard) {
                 this.update_score(enemy.score_value + bullet.damage)
             }
-            else
-            {
+            else {
                 this.update_score(enemy.score_value + bullet.damage)
             }
 
@@ -392,23 +371,19 @@ class Level extends Phaser.Scene {
                 this.sound.play("bigLaser")
                 this.me.bullet_type = "Bullet"
                 this.me.setTexture("Joker")
-                if(this.me.health - bullet.damage > 0)
-                {
+                if (this.me.health - bullet.damage > 0) {
                     this.me.health -= bullet.damage;
                 }
-                else
-                {
+                else {
                     this.me.health = 1;
                 }
                 this.me.isJoker = true;
                 this.bulletGroup.getFirstDead().damage = 1;
-                if (this.me.health > 3)
-                    {
-                        this.me.health = 3;
-                    }
+                if (this.me.health > 3) {
+                    this.me.health = 3;
+                }
             }
-            else
-            {
+            else {
 
                 this.sound.play("laser")
             }
