@@ -247,7 +247,6 @@ class Lobster extends Phaser.Scene {
         
         this.curve1 = new Phaser.Curves.Spline(this.points1);
         this.curves.push(this.curve1);
-
         this.points2 =
         [
             0, 0,
@@ -259,7 +258,6 @@ class Lobster extends Phaser.Scene {
         
         this.curve2 = new Phaser.Curves.Spline(this.points2);
         this.curves.push(this.curve2);
-
         this.points3 =
         [
             0, 0,
@@ -271,7 +269,6 @@ class Lobster extends Phaser.Scene {
         
         this.curve3 = new Phaser.Curves.Spline(this.points3);
         this.curves.push(this.curve3);
-
         
     }
     restart()

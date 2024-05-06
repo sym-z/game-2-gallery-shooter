@@ -227,9 +227,9 @@ class Crab extends Phaser.Scene {
         this.points =
         [
             0, 0,
-            -200, 40,
-            0, 0,
-            200, -40,
+            200, 0,
+            200, -100,
+            200, 0,
             0,0
         ];
         
@@ -239,41 +239,40 @@ class Crab extends Phaser.Scene {
         this.points1 =
         [
             0, 0,
-            200, -40,
-            0, 0,
-            -200, 40,
+            -200, 0,
+            -200, -100,
+            -200, 0,
             0,0
         ];
         
         this.curve1 = new Phaser.Curves.Spline(this.points1);
         this.curves.push(this.curve1);
-
         this.points2 =
         [
             0, 0,
-            -200, 40,
-            0, 0,
-            200, -40,
+            200, 0,
+            200, 100,
+            200, 0,
             0,0
         ];
         
         this.curve2 = new Phaser.Curves.Spline(this.points2);
         this.curves.push(this.curve2);
-
         this.points3 =
         [
             0, 0,
-            200, -40,
-            0, 0,
-            -200, 40,
+            -200, 0,
+            -200, 100,
+            -200, 0,
             0,0
         ];
         
         this.curve3 = new Phaser.Curves.Spline(this.points3);
         this.curves.push(this.curve3);
-
         
     }
+
+
     restart()
     {
         for (let e of this.enemies)
