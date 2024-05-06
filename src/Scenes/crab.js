@@ -365,11 +365,11 @@ class Crab extends Phaser.Scene {
             enemy.die();
             if(enemy.faceCard)
             {
-                this.update_score(enemy.score_value)
+                this.update_score(enemy.score_value + bullet.damage)
             }
             else
             {
-                this.update_score(enemy.score_value)
+                this.update_score(enemy.score_value  + bullet.damage)
             }
 
             this.scoreText.setText("Score: " + this.globals.score)
