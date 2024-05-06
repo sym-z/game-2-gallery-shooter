@@ -118,6 +118,7 @@ class Level extends Phaser.Scene {
         // Create all enemies, push them into an array
         for (let i = 0; i < this.num_enemies; i++) {
             this.enemy = new Enemy(this, this.curves[i], 400 , 300 - i * 75, this.enemy_names[i], this.enemy_names[i]);
+            if (this.enemy.scene == undefined) console.log("UNDEFINED ENEMY")
             this.enemy.startFollow(obj)
             this.enemies.push(this.enemy);
         }
@@ -352,7 +353,7 @@ class Level extends Phaser.Scene {
             enemy.damage = diff;
             enemy.card = enemy.calc_card();
             console.log("ENEMY ID: " + new_id)
-            enemy.setTexture(new_id, 0)
+            if (enemy.scene != undefined && enemy != null && enemy.scene.sys != undefined) enemy.setTexture(new_id, 0)
             bullet.damage = 1;
         }
         else {
