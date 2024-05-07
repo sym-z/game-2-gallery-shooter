@@ -11,7 +11,7 @@ class Controls extends Phaser.Scene
     create() 
     {
         this.title = this.add.bitmapText(400,50,'pi','Move Left / Right:', 64).setOrigin(0.5);
-        this.title = this.add.bitmapText(400,125,'pi','Left and Right Arrow Keys', 64).setOrigin(0.5);
+        this.title = this.add.bitmapText(400,125,'pi','A (Left) and D (Right)', 64).setOrigin(0.5);
         this.title = this.add.bitmapText(400,200,'pi','Fire Card: SPACE', 64).setOrigin(0.5);
         this.title = this.add.bitmapText(400,300,'pi','Use the cards gained by destroying', 48).setOrigin(0.5);
         this.title = this.add.bitmapText(400,350,'pi','enemies to deal their damage', 48).setOrigin(0.5);
